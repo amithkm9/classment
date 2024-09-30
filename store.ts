@@ -7,7 +7,7 @@ type State = {
   containers: Array<object>
   snackbar: {
     open: boolean;
-    severity: string;
+    severity: any;
     msg: string;
   };
 
