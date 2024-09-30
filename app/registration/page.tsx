@@ -4,11 +4,15 @@ import React, { useTransition } from "react";
 import { TextField, Card, Typography, } from "@mui/material";
 import Link from "next/link";
 import LoadingButton from '@mui/lab/LoadingButton';
-
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 import { useStore } from "@/store";
 import { createRegisterUser } from "@/app/registration/action";
 import Image from "next/image"
+import { CheckBox } from "@mui/icons-material";
 
 
 
@@ -74,18 +78,18 @@ export default function RegistrationPage() {
                 value={registrationForm.full_name}
                 onChange={(e) => setRegistrationFormField("full_name", e.target.value)}
               />
-              <TextField
-                required
-                fullWidth
-                type="date"
+               <LocalizationProvider dateAdapter={AdapterDayjs}>
+               <DemoContainer components={['DatePicker']}>
+               <DatePicker
                 label="Date of Birth"
                 size="small"
                 name="date_of_birth"
-                variant="outlined"
-                className="border rounded-md"
+                className="border rounded-md w-full"
                 value={registrationForm.date_of_birth}
                 onChange={(e) => setRegistrationFormField("date_of_birth", e.target.value)}
               />
+                </DemoContainer>
+                </LocalizationProvider>
               <TextField
                 required
                 fullWidth
@@ -120,7 +124,15 @@ export default function RegistrationPage() {
                 value={registrationForm.Password}
                 onChange={(e) => setRegistrationFormField("Password", e.target.value)}
               />
-              
+              <div>
+                <input
+                type='checkbox'
+                name="termsAndConditions"
+                value="termsAndConditions"
+                className="w-3 h-3"
+                />
+                <label className="ml-2">I agree to the <span className="text-blue-500"> Terms and Conditions</span></label>
+              </div>
               <LoadingButton
                 type="submit"
                 variant="contained"
@@ -133,14 +145,14 @@ export default function RegistrationPage() {
                 Register
               </LoadingButton>
              
-              <div className="text-center">
+              {/* <div className="text-center">
                 <p className="text-gray-600">
                   Already have an account?{" "}
                   <span className="text-blue-500">
                     <Link href="/login">Login</Link>
                   </span>
                 </p>
-              </div>
+              </div> */}
             </div>
           </form>
         </Card>
