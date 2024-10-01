@@ -8,11 +8,11 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs, { Dayjs } from 'dayjs';
 
 import { useStore } from "@/store";
 import { createRegisterUser } from "@/app/registration/action";
 import Image from "next/image"
-import { CheckBox } from "@mui/icons-material";
 
 
 
@@ -81,13 +81,18 @@ export default function RegistrationPage() {
                <LocalizationProvider dateAdapter={AdapterDayjs}>
                <DemoContainer components={['DatePicker']}>
                <DatePicker
-                label="Date of Birth"
-                size="small"
-                name="date_of_birth"
-                className="border rounded-md w-full"
-                value={registrationForm.date_of_birth}
-                onChange={(e) => setRegistrationFormField("date_of_birth", e.target.value)}
-              />
+                  label="Date of Birth"
+                  value={registrationForm.date_of_birth ? dayjs(registrationForm.date_of_birth) : null}
+                  onChange={(newDate: Dayjs | null) => {
+                    if (newDate) {
+                      setRegistrationFormField('date_of_birth'); 
+                    } else {
+                      setRegistrationFormField('date_of_birth', ''); 
+                    }
+                  }}
+                  renderInput={(params) => <TextField {...params}  />}
+                  className="w-full"
+                />
                 </DemoContainer>
                 </LocalizationProvider>
               <TextField

@@ -12,9 +12,9 @@ type State = {
   };
 
   registrationForm: {
-    fullName: string;
-    dob: string;
-    phoneNumber: string;
+    full_name: string;
+    date_of_birth: string;
+    phone_number: string;
     email: string;
     password: string;
   };
@@ -30,9 +30,9 @@ const initState: State = {
   },
 
   registrationForm: {
-    fullName: '',
-    dob: '',
-    phoneNumber: '',
+    full_name: '',
+    date_of_birth: '',
+    phone_number: '',
     email: '',
     password: '',
   },
