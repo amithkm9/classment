@@ -1,34 +1,54 @@
 import { create } from 'zustand';
 import { cloneDeep } from 'lodash';
 
-type State = {
-  userSession: object;
-  profileDetails: object;
-  containers: Array<object>
-  snackbar: {
-    open: boolean;
-    severity: any;
-    msg: string;
-  };
-
-  registrationForm: {
-    full_name: string;
-    date_of_birth: string;
-    phone_number: string;
-    email: string;
-    password: string;
-  };
+// Improved type definitions
+type UserSession = {
+  id?: string;
+  user_id?: string;
+  [key: string]: any;
 };
 
+type ProfileDetails = {
+  id?: string;
+  full_name?: string;
+  email?: string;
+  phone_number?: string;
+  date_of_birth?: string;
+  [key: string]: any;
+};
+
+type SnackbarState = {
+  open: boolean;
+  severity: 'success' | 'error' | 'info' | 'warning';
+  msg: string;
+};
+
+type RegistrationFormState = {
+  full_name: string;
+  date_of_birth: string;
+  phone_number: string;
+  email: string;
+  password: string;
+};
+
+type State = {
+  userSession: UserSession;
+  profileDetails: ProfileDetails;
+  containers: Array<any>;
+  snackbar: SnackbarState;
+  registrationForm: RegistrationFormState;
+};
+
+// Initial state with proper typing
 const initState: State = {
   userSession: {},
   profileDetails: {},
+  containers: [],
   snackbar: {
     open: false,
-    severity: '',
+    severity: 'info',
     msg: '',
   },
-
   registrationForm: {
     full_name: '',
     date_of_birth: '',
@@ -39,35 +59,60 @@ const initState: State = {
 };
 
 type Action = {
-  openSnackbar: (severity: string, msg: string) => void;
+  openSnackbar: (severity: SnackbarState['severity'], msg: string) => void;
   closeSnackbar: () => void;
 
-  setProfileDetailsAndSession: (session: State['userSession'], profileDetails: State['profileDetails']) => void
+  setProfileDetailsAndSession: (session: UserSession, profileDetails: ProfileDetails) => void;
 
-  setRegistrationFormField: (key: string, value: string) => void;
+  setRegistrationFormField: (key: keyof RegistrationFormState, value: string) => void;
   resetRegistrationForm: () => void;
 
-  setUserSession: (session: State['userSession']) => void;
+  setUserSession: (session: UserSession) => void;
   clearUserSession: () => void;
 
-  setContainers: (containers: State['containers']) => void
+  setContainers: (containers: State['containers']) => void;
 };
 
 export const useStore = create<State & Action>((set) => ({
   ...cloneDeep(initState),
 
-  openSnackbar: (severity, msg) => set((state) => ({...state, snackbar: { open: true, severity, msg } })),
-  closeSnackbar: () => set((state) => ({snackbar: { ...state.snackbar, open: false}})),
+  openSnackbar: (severity, msg) => set((state) => ({
+    ...state,
+    snackbar: { open: true, severity, msg }
+  })),
+  
+  closeSnackbar: () => set((state) => ({
+    ...state,
+    snackbar: { ...state.snackbar, open: false }
+  })),
 
-  setProfileDetailsAndSession: (userSession, profileDetails) => set(() => ({userSession, profileDetails})),
+  setProfileDetailsAndSession: (userSession, profileDetails) => set(() => ({
+    userSession,
+    profileDetails
+  })),
 
   setRegistrationFormField: (key, value) => set((state) => ({
+    ...state,
     registrationForm: { ...state.registrationForm, [key]: value },
   })),
-  resetRegistrationForm: () => set(() => cloneDeep(initState)), // I modify this check it later
+  
+  resetRegistrationForm: () => set((state) => ({
+    ...state,
+    registrationForm: cloneDeep(initState.registrationForm)
+  })),
 
-  setUserSession: (session) => set(() => ({ userSession: session})),
-  clearUserSession: () => set(() => ({ userSession: {} })),
+  setUserSession: (session) => set((state) => ({
+    ...state,
+    userSession: session
+  })),
+  
+  clearUserSession: () => set((state) => ({
+    ...state,
+    userSession: {}
+  })),
 
-  setContainers: (containers) => set(() => ({containers})),
+  setContainers: (containers) => set((state) => ({
+    ...state,
+    containers
+  })),
 }));
